@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hug Day - Iffu ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#fff0f5,#ffe6ee,#fff5f8);
+overflow:hidden;
+color:#5e2b3c;
+}
+
+.page{
+height:100vh;
+width:100vw;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:30px;
+position:absolute;
+transition:1s ease;
+}
+
+h1{
+font-family:'Great Vibes',cursive;
+font-size:48px;
+margin-bottom:20px;
+animation:fadeIn 2s ease;
+}
+
+p{
+font-size:18px;
+max-width:500px;
+animation:fadeIn 3s ease;
+}
+
+button{
+margin-top:30px;
+padding:12px 25px;
+border:none;
+border-radius:30px;
+background:#ff8fab;
+color:white;
+font-size:16px;
+cursor:pointer;
+box-shadow:0 5px 15px rgba(255,143,171,0.4);
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.1);
+background:#ff4d6d;
+}
+
+.hidden{
+display:none;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(20px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+/* floating hearts */
+.heart{
+position:absolute;
+bottom:-50px;
+font-size:20px;
+animation:floatUp 8s linear infinite;
+opacity:0.6;
+}
+
+@keyframes floatUp{
+0%{transform:translateY(0) scale(1);}
+100%{transform:translateY(-110vh) scale(1.5);}
+}
+
+/* hug animation */
+.hug{
+font-size:80px;
+animation:heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat{
+0%{transform:scale(1);}
+50%{transform:scale(1.1);}
+100%{transform:scale(1);}
+}
+
+/* swipe hint */
+.swipe{
+position:absolute;
+bottom:20px;
+font-size:14px;
+opacity:0.6;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" src="music.mp3" loop></audio>
+
+<div id="pages"></div>
+
+<script>
+const content = [
+"Hi Iffu 🤍",
+"Happy Hug Day My Love 🫂",
+"From the first hug...",
+"To every tight squeeze...",
+"You feel like home 🏡",
+"When I hug you, the world disappears ✨",
+"I promise to hold you in every storm 🌧️",
+"Every hug from you heals me 💖",
+"Ifrah Mishra, my forever person 🤍",
+"Come here... give me one more hug 🫂❤️"
+];
+
+let current = 0;
+const container = document.getElementById("pages");
+
+content.forEach((text,i)=>{
+let page=document.createElement("div");
+page.className="page";
+page.style.left = i*100+"vw";
+
+page.innerHTML = `
+<h1>${text}</h1>
+<div class="hug">🫂</div>
+<p>My Iffu, every hug from you feels like the safest place in this universe. I never want to let you go.</p>
+<button onclick="nextPage()">Next 💕</button>
+<div class="swipe">Swipe or Tap Next</div>
+`;
+
+container.appendChild(page);
+});
+
+function nextPage(){
+if(current < content.length-1){
+current++;
+container.style.transform="translateX(-"+current*100+"vw)";
+vibrate();
+}
+}
+
+function vibrate(){
+if(navigator.vibrate){
+navigator.vibrate(50);
+}
+}
+
+/* floating hearts */
+function createHeart(){
+let heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="❤️";
+heart.style.left=Math.random()*100+"vw";
+heart.style.animationDuration=(5+Math.random()*5)+"s";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),8000);
+}
+setInterval(createHeart,800);
+
+/* auto play music after first click */
+document.body.addEventListener("click",()=>{
+document.getElementById("bgMusic").play();
+},{once:true});
+
+/* easter egg */
+let secret="";
+document.addEventListener("keydown",(e)=>{
+secret+=e.key;
+if(secret.includes("iffu")){
+alert("Easter Egg 💖: I love you endlessly, Iffu 🤍");
+secret="";
+}
+});
+</script>
+
+</body>
+</html>
