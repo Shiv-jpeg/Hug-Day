@@ -3,21 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hug Day - Iffu ❤️</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+<title>Hug Day - Iffu 🤍</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
+background:linear-gradient(120deg,#fdf6f8,#f8e8ee,#fdf2f5);
 font-family:'Poppins',sans-serif;
-background:linear-gradient(135deg,#fff0f5,#ffe6ee,#fff5f8);
 overflow:hidden;
-color:#5e2b3c;
+color:#4b2e39;
 }
 
 .page{
@@ -28,82 +25,69 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 text-align:center;
-padding:30px;
+padding:40px;
 position:absolute;
-transition:1s ease;
+transition:1.2s cubic-bezier(.77,0,.18,1);
 }
 
 h1{
-font-family:'Great Vibes',cursive;
-font-size:48px;
-margin-bottom:20px;
-animation:fadeIn 2s ease;
+font-family:'Playfair Display',serif;
+font-size:42px;
+margin-bottom:25px;
+opacity:0;
+animation:fadeUp 1.5s forwards;
 }
 
 p{
 font-size:18px;
-max-width:500px;
-animation:fadeIn 3s ease;
+max-width:600px;
+line-height:1.8;
+opacity:0;
+animation:fadeUp 2.5s forwards;
 }
 
 button{
-margin-top:30px;
-padding:12px 25px;
+margin-top:35px;
+padding:12px 28px;
 border:none;
-border-radius:30px;
-background:#ff8fab;
+border-radius:40px;
+background:#b76e79;
 color:white;
-font-size:16px;
+font-size:15px;
 cursor:pointer;
-box-shadow:0 5px 15px rgba(255,143,171,0.4);
-transition:0.3s;
+letter-spacing:1px;
+transition:0.4s;
+box-shadow:0 6px 20px rgba(183,110,121,0.3);
 }
 
 button:hover{
-transform:scale(1.1);
-background:#ff4d6d;
+transform:translateY(-4px);
+background:#9f5b66;
 }
 
-.hidden{
-display:none;
-}
-
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(20px);}
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(25px);}
 to{opacity:1;transform:translateY(0);}
 }
 
-/* floating hearts */
-.heart{
+/* soft petals */
+.petal{
 position:absolute;
-bottom:-50px;
-font-size:20px;
-animation:floatUp 8s linear infinite;
+top:-20px;
+font-size:18px;
+animation:fall linear infinite;
 opacity:0.6;
 }
 
-@keyframes floatUp{
-0%{transform:translateY(0) scale(1);}
-100%{transform:translateY(-110vh) scale(1.5);}
+@keyframes fall{
+0%{transform:translateY(0) rotate(0deg);}
+100%{transform:translateY(110vh) rotate(360deg);}
 }
 
-/* hug animation */
-.hug{
-font-size:80px;
-animation:heartbeat 1.5s infinite;
-}
-
-@keyframes heartbeat{
-0%{transform:scale(1);}
-50%{transform:scale(1.1);}
-100%{transform:scale(1);}
-}
-
-/* swipe hint */
 .swipe{
 position:absolute;
-bottom:20px;
-font-size:14px;
+bottom:25px;
+font-size:13px;
 opacity:0.6;
 }
 </style>
@@ -113,78 +97,118 @@ opacity:0.6;
 
 <audio id="bgMusic" src="music.mp3" loop></audio>
 
-<div id="pages"></div>
+<div id="container"></div>
 
 <script>
-const content = [
-"Hi Iffu 🤍",
-"Happy Hug Day My Love 🫂",
-"From the first hug...",
-"To every tight squeeze...",
-"You feel like home 🏡",
-"When I hug you, the world disappears ✨",
-"I promise to hold you in every storm 🌧️",
-"Every hug from you heals me 💖",
-"Ifrah Mishra, my forever person 🤍",
-"Come here... give me one more hug 🫂❤️"
+const lines = [
+
+{
+title:"My Iffu 🤍",
+text:"You are the calm shade of a tree in scorching heat — the quiet relief my soul did not know it was searching for."
+},
+
+{
+title:"On This Hug Day 🫂",
+text:"If I could wrap my arms around every worry you carry, I would hold them until they forgot how to hurt you."
+},
+
+{
+title:"Your Presence",
+text:"Feels like evening sunlight resting gently on tired shoulders — warm, golden, and impossibly peaceful."
+},
+
+{
+title:"When I Hold You",
+text:"The world softens. The noise fades. And all that remains is a heartbeat learning the rhythm of forever."
+},
+
+{
+title:"Ifrah Mishra 🌸",
+text:"In your embrace, I find not just love, but dignity, respect, and a home built from tenderness."
+},
+
+{
+title:"You Deserve",
+text:"A man who holds you not just with arms, but with intention — steady, protective, and endlessly gentle."
+},
+
+{
+title:"Every Hug",
+text:"Is my silent promise that I will stand beside you in storms, and never let your light dim alone."
+},
+
+{
+title:"Stay Close",
+text:"Because when you lean into me, even time pauses… as if it knows something sacred is happening."
+},
+
+{
+title:"My Safe Place",
+text:"Your heartbeat against mine feels like a quiet prayer answered without asking."
+},
+
+{
+title:"Come Here 🤍",
+text:"Let me hold you the way a gentleman holds something precious — carefully, gratefully, forever."
+}
+
 ];
 
 let current = 0;
-const container = document.getElementById("pages");
+const container = document.getElementById("container");
 
-content.forEach((text,i)=>{
+lines.forEach((item,i)=>{
 let page=document.createElement("div");
 page.className="page";
-page.style.left = i*100+"vw";
+page.style.left=i*100+"vw";
 
-page.innerHTML = `
-<h1>${text}</h1>
-<div class="hug">🫂</div>
-<p>My Iffu, every hug from you feels like the safest place in this universe. I never want to let you go.</p>
-<button onclick="nextPage()">Next 💕</button>
-<div class="swipe">Swipe or Tap Next</div>
+page.innerHTML=`
+<h1>${item.title}</h1>
+<p>${item.text}</p>
+<button onclick="nextPage()">Next</button>
+<div class="swipe">Swipe or tap Next</div>
 `;
 
 container.appendChild(page);
 });
 
 function nextPage(){
-if(current < content.length-1){
+if(current < lines.length-1){
 current++;
 container.style.transform="translateX(-"+current*100+"vw)";
-vibrate();
+softVibrate();
 }
 }
 
-function vibrate(){
+function softVibrate(){
 if(navigator.vibrate){
-navigator.vibrate(50);
+navigator.vibrate(40);
 }
 }
 
-/* floating hearts */
-function createHeart(){
-let heart=document.createElement("div");
-heart.className="heart";
-heart.innerHTML="❤️";
-heart.style.left=Math.random()*100+"vw";
-heart.style.animationDuration=(5+Math.random()*5)+"s";
-document.body.appendChild(heart);
-setTimeout(()=>heart.remove(),8000);
+/* gentle falling petals */
+function createPetal(){
+let petal=document.createElement("div");
+petal.className="petal";
+petal.innerHTML="🌸";
+petal.style.left=Math.random()*100+"vw";
+petal.style.animationDuration=(6+Math.random()*6)+"s";
+document.body.appendChild(petal);
+setTimeout(()=>petal.remove(),12000);
 }
-setInterval(createHeart,800);
+setInterval(createPetal,900);
 
-/* auto play music after first click */
+/* music autoplay after first interaction */
 document.body.addEventListener("click",()=>{
 document.getElementById("bgMusic").play();
 },{once:true});
 
-/* easter egg */
+/* hidden easter egg */
 let secret="";
 document.addEventListener("keydown",(e)=>{
-secret+=e.key;
-if(secret.includes("iffu")){
-alert("Easter Egg 💖: I love you endlessly, Iffu 🤍");
+secret+=e.key.toLowerCase();
+if(secret.includes("hugme")){
+alert("🤍 Easter Egg: I will always be your safest hug, Iffu.");
 secret="";
 }
 });
