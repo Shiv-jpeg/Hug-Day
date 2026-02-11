@@ -8,15 +8,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
-body{
-  margin:0;
-  overflow:hidden;
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  height:100%;
   font-family:'Poppins',sans-serif;
+  overflow-x:hidden;
   background:#0c0820;
   color:#f7ecff;
 }
 
-/* Soft Galaxy Background */
+/* Galaxy background */
 body::before{
   content:"";
   position:fixed;
@@ -28,7 +30,7 @@ body::before{
   z-index:-1;
 }
 
-/* Heartbeat Glow */
+/* Heartbeat glow */
 body::after{
   content:"";
   position:fixed;
@@ -43,37 +45,28 @@ body::after{
   100%{opacity:.2}
 }
 
-/* Flip Book */
-.book{
-  width:100vw;
+/* Sections */
+.section{
   height:100vh;
-  perspective:2000px;
-  position:relative;
-}
-
-.page{
-  width:100%;
-  height:100%;
-  position:absolute;
-  background:linear-gradient(135deg,#2b1442,#4a2c6e);
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   text-align:center;
   padding:40px;
-  transform-origin:left;
-  transition:transform 1s ease;
-  box-shadow:0 0 40px rgba(0,0,0,.6);
-  backface-visibility:hidden;
+  scroll-snap-align:start;
 }
 
-.page.flipped{
-  transform:rotateY(-180deg);
+.container{
+  height:100vh;
+  overflow-y:scroll;
+  scroll-snap-type:y mandatory;
+  -webkit-overflow-scrolling:touch;
 }
 
 h1,h2{
   font-family:'Playfair Display',serif;
+  margin-bottom:16px;
 }
 
 p{
@@ -81,18 +74,7 @@ p{
   line-height:1.8;
 }
 
-/* Floating Hearts */
-.heart{
-  position:fixed;
-  bottom:-20px;
-  font-size:18px;
-  animation:float 8s linear infinite;
-}
-@keyframes float{
-  to{transform:translateY(-120vh);opacity:0}
-}
-
-/* Big Hug Animation */
+/* Hug animation */
 .hug{
   font-size:100px;
   animation:squeeze 2.5s infinite;
@@ -103,18 +85,29 @@ p{
   100%{transform:scale(1)}
 }
 
-/* Progress Bar */
-.progress{
+/* Floating hearts */
+.heart{
   position:fixed;
-  bottom:0;
-  left:0;
-  height:5px;
-  background:#ff8ad4;
-  width:0%;
-  transition:width .5s;
+  bottom:-20px;
+  font-size:18px;
+  animation:float 8s linear infinite;
+}
+@keyframes float{
+  to{transform:translateY(-120vh);opacity:0}
 }
 
-/* Music Overlay */
+/* Progress bar */
+.progress{
+  position:fixed;
+  top:0;
+  left:0;
+  height:4px;
+  background:#ff8ad4;
+  width:0%;
+  z-index:999;
+}
+
+/* Music overlay */
 #musicOverlay{
   position:fixed;
   inset:0;
@@ -123,8 +116,9 @@ p{
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  z-index:999;
+  z-index:1000;
 }
+
 #musicOverlay button{
   margin-top:20px;
   padding:12px 30px;
@@ -144,84 +138,70 @@ p{
 
 <div id="musicOverlay">
   <h2>For my BIVI 🤗</h2>
-  <p>This one is a warm hug…</p>
+  <p>This is a warm hug for you…</p>
   <button onclick="startMusic()">Start</button>
 </div>
 
-<div class="book">
+<div class="progress" id="progress"></div>
 
-<div class="page">
+<div class="container" id="container">
+
+<div class="section">
   <h1>Happy Hug Day 🤗</h1>
-  <p>Tap anywhere to turn the page.</p>
 </div>
 
-<div class="page">
+<div class="section">
   <h2>Iffu…</h2>
   <p>If I could, I’d hug you right now.</p>
 </div>
 
-<div class="page">
+<div class="section">
   <div class="hug">🤗</div>
   <h2>A Tight Hug</h2>
 </div>
 
-<div class="page">
+<div class="section">
   <h2>For My BIVI</h2>
   <p>Because you deserve warmth.</p>
 </div>
 
-<div class="page">
+<div class="section">
   <h2>When You’re Tired</h2>
   <p>I’ll hold you close.</p>
 </div>
 
-<div class="page">
+<div class="section">
   <h2>When You’re Happy</h2>
   <p>I’ll celebrate in your arms.</p>
 </div>
 
-<div class="page">
+<div class="section">
   <h2>No Words Needed</h2>
   <p>Just a hug.</p>
 </div>
 
-<div class="page">
-  <h2>Long Hug</h2>
+<div class="section">
   <div class="hug">🤍</div>
+  <h2>Long Hug</h2>
 </div>
 
-<div class="page">
+<div class="section">
   <h2>Forever?</h2>
   <p>Come here 🫂</p>
 </div>
 
-<div class="page">
+<div class="section">
   <h1>🤗 Forever My BIVI 🤗</h1>
   <p>Happy Hug Day, Iffu.</p>
 </div>
 
 </div>
 
-<div class="progress" id="progress"></div>
-
 <script>
 function startMusic(){
   document.getElementById("bgMusic").play();
   document.getElementById("musicOverlay").style.display="none";
 }
-
-/* Flip Logic */
-let current=0;
-const pages=document.querySelectorAll(".page");
-const progress=document.getElementById("progress");
-
-document.body.addEventListener("click",()=>{
-  if(current<pages.length){
-    pages[current].classList.add("flipped");
-    current++;
-    progress.style.width=(current/pages.length*100)+"%";
-  }
-});
 
 /* Floating hearts */
 setInterval(()=>{
@@ -233,7 +213,16 @@ setInterval(()=>{
   setTimeout(()=>h.remove(),8000);
 },800);
 
-/* Easter Eggs */
+/* Progress indicator */
+const container=document.getElementById("container");
+container.addEventListener("scroll",()=>{
+  const scrollTop=container.scrollTop;
+  const scrollHeight=container.scrollHeight - container.clientHeight;
+  const progressPercent=(scrollTop/scrollHeight)*100;
+  document.getElementById("progress").style.width=progressPercent+"%";
+});
+
+/* Easter eggs */
 let taps=0;
 document.body.addEventListener("click",()=>{
   taps++;
