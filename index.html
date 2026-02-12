@@ -17,42 +17,34 @@ overflow:hidden;
 color:#4b2e39;
 }
 
-/* glowing stars name */
-.stars{
+/* STAR CANVAS */
+#stars{
 position:fixed;
-top:40px;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+}
+
+/* Glowing Name */
+#glowName{
+position:fixed;
+top:20px;
 width:100%;
 text-align:center;
 font-family:'Playfair Display',serif;
-font-size:26px;
+font-size:22px;
 letter-spacing:4px;
-color:#b76e79;
-animation:glow 3s ease-in-out infinite alternate;
+color:white;
+text-shadow:0 0 10px #fff,0 0 20px #ffb6c1,0 0 40px #ff69b4;
+animation:glow 2s infinite alternate;
 z-index:5;
 }
 
 @keyframes glow{
-from{text-shadow:0 0 5px #fff,0 0 10px #f8c8dc;}
-to{text-shadow:0 0 20px #ffb6c1,0 0 40px #ff69b4;}
-}
-
-/* silhouette background */
-.silhouette{
-position:fixed;
-bottom:0;
-width:100%;
-height:40vh;
-background:url('https://i.imgur.com/8QfQ9Zl.png') center bottom no-repeat;
-background-size:contain;
-opacity:0.08;
-animation:pulse 6s infinite ease-in-out;
-z-index:0;
-}
-
-@keyframes pulse{
-0%{opacity:0.05;}
-50%{opacity:0.12;}
-100%{opacity:0.05;}
+from{text-shadow:0 0 10px #fff,0 0 20px #ffb6c1;}
+to{text-shadow:0 0 20px #fff,0 0 40px #ff69b4;}
 }
 
 .page{
@@ -66,7 +58,6 @@ text-align:center;
 padding:40px;
 position:absolute;
 transition:1.2s cubic-bezier(.77,0,.18,1);
-z-index:2;
 }
 
 h1{
@@ -84,7 +75,7 @@ animation:fadeUp 2.5s forwards;
 }
 
 button{
-margin-top:20px;
+margin-top:25px;
 padding:12px 28px;
 border:none;
 border-radius:40px;
@@ -95,7 +86,6 @@ cursor:pointer;
 letter-spacing:1px;
 transition:0.3s;
 box-shadow:0 6px 20px rgba(183,110,121,0.3);
-position:relative;
 }
 
 button:hover{
@@ -108,14 +98,13 @@ from{opacity:0;transform:translateY(25px);}
 to{opacity:1;transform:translateY(0);}
 }
 
-/* petals */
+/* Falling petals */
 .petal{
 position:absolute;
 top:-20px;
 font-size:18px;
 animation:fall linear infinite;
 opacity:0.6;
-z-index:1;
 }
 
 @keyframes fall{
@@ -123,7 +112,20 @@ z-index:1;
 100%{transform:translateY(110vh) rotate(360deg);}
 }
 
-/* popup */
+/* Explosion petals */
+.explode{
+position:fixed;
+font-size:20px;
+pointer-events:none;
+animation:burst 1.8s ease-out forwards;
+}
+
+@keyframes burst{
+0%{transform:translate(0,0) scale(1);opacity:1;}
+100%{transform:translate(var(--x),var(--y)) scale(1.5);opacity:0;}
+}
+
+/* Popup */
 #lovePopup{
 position:fixed;
 top:0;
@@ -142,30 +144,27 @@ transition:0.6s;
 
 #lovePopup h2{
 font-family:'Playfair Display',serif;
-font-size:80px;
+font-size:70px;
 color:white;
-letter-spacing:6px;
+letter-spacing:4px;
 animation:scaleLove 1s infinite alternate;
 }
 
 @keyframes scaleLove{
 from{transform:scale(1);}
-to{transform:scale(1.15);}
+to{transform:scale(1.1);}
 }
 
-.swipe{
+#noBtn{
 position:absolute;
-bottom:25px;
-font-size:13px;
-opacity:0.6;
 }
 </style>
 </head>
 
 <body>
 
-<div class="stars">✨ IFRah Mishra ✨</div>
-<div class="silhouette"></div>
+<canvas id="stars"></canvas>
+<div id="glowName">IFRAH MISHRA ✨</div>
 
 <audio id="bgMusic" src="music.mp3" loop></audio>
 
@@ -176,38 +175,54 @@ opacity:0.6;
 </div>
 
 <script>
-const lines = [
 
+/* STAR BACKGROUND */
+const canvas=document.getElementById("stars");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+let stars=[];
+for(let i=0;i<120;i++){
+stars.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+r:Math.random()*2
+});
+}
+function drawStars(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle="white";
+stars.forEach(s=>{
+ctx.beginPath();
+ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+ctx.fill();
+});
+requestAnimationFrame(drawStars);
+}
+drawStars();
+
+/* Pages */
+const lines = [
 { title:"My Iffu 🤍",
 text:"You are the calm shade of a tree in scorching heat — the quiet relief my soul did not know it was searching for." },
-
 { title:"On This Hug Day 🫂",
 text:"If I could wrap my arms around every worry you carry, I would hold them until they forgot how to hurt you." },
-
 { title:"Your Presence",
 text:"Feels like evening sunlight resting gently on tired shoulders — warm, golden, and impossibly peaceful." },
-
 { title:"When I Hold You",
 text:"The world softens. The noise fades. And all that remains is a heartbeat learning the rhythm of forever." },
-
 { title:"Ifrah Mishra 🌸",
 text:"In your embrace, I find not just love, but dignity, respect, and a home built from tenderness." },
-
 { title:"You Deserve",
 text:"A man who holds you not just with arms, but with intention — steady, protective, and endlessly gentle." },
-
 { title:"Every Hug",
 text:"Is my silent promise that I will stand beside you in storms, and never let your light dim alone." },
-
 { title:"Stay Close",
 text:"Because when you lean into me, even time pauses… as if it knows something sacred is happening." },
-
 { title:"My Safe Place",
 text:"Your heartbeat against mine feels like a quiet prayer answered without asking." },
-
 { title:"One Small Question 🤍",
 text:"Will you promise to let me be the arms you run to, on your happiest days and your hardest ones?" }
-
 ];
 
 let current = 0;
@@ -225,14 +240,12 @@ page.innerHTML=`
 <p>${item.text}</p>
 <button onclick="showLove()">Yes, Always 🤍</button>
 <button id="noBtn">No 🙈</button>
-<div class="swipe">Choose wisely 😌</div>
 `;
 }else{
 page.innerHTML=`
 <h1>${item.title}</h1>
 <p>${item.text}</p>
 <button onclick="nextPage()">Next</button>
-<div class="swipe">Swipe or tap Next</div>
 `;
 }
 
@@ -243,14 +256,32 @@ function nextPage(){
 if(current < lines.length-1){
 current++;
 container.style.transform="translateX(-"+current*100+"vw)";
-softVibrate();
 }
 }
 
+/* Petal Explosion */
+function explodePetals(){
+for(let i=0;i<40;i++){
+let petal=document.createElement("div");
+petal.className="explode";
+petal.innerHTML="🌸";
+petal.style.left="50%";
+petal.style.top="50%";
+petal.style.setProperty('--x',(Math.random()*600-300)+"px");
+petal.style.setProperty('--y',(Math.random()*600-300)+"px");
+document.body.appendChild(petal);
+setTimeout(()=>petal.remove(),1800);
+}
+}
+
+/* Show Love */
 function showLove(){
+explodePetals();
 popup.style.opacity="1";
 popup.style.pointerEvents="auto";
-softVibrate();
+if(navigator.vibrate){
+navigator.vibrate([50,30,50]);
+}
 }
 
 popup.addEventListener("click",()=>{
@@ -258,22 +289,15 @@ popup.style.opacity="0";
 popup.style.pointerEvents="none";
 });
 
-function softVibrate(){
-if(navigator.vibrate){
-navigator.vibrate([40,30,40]);
-}
-}
-
-/* runaway NO button */
+/* Playful No */
 document.addEventListener("mouseover",function(e){
 if(e.target.id==="noBtn"){
-e.target.style.position="absolute";
-e.target.style.left=Math.random()*80+"vw";
-e.target.style.top=Math.random()*80+"vh";
+e.target.style.top=Math.random()*60+"%";
+e.target.style.left=Math.random()*60+"%";
 }
 });
 
-/* petals */
+/* Falling petals */
 function createPetal(){
 let petal=document.createElement("div");
 petal.className="petal";
@@ -285,21 +309,19 @@ setTimeout(()=>petal.remove(),12000);
 }
 setInterval(createPetal,900);
 
-/* music */
+/* Music */
 document.body.addEventListener("click",()=>{
 document.getElementById("bgMusic").play();
 },{once:true});
 
-/* easter eggs */
+/* Easter Eggs */
 let secret="";
 document.addEventListener("keydown",(e)=>{
 secret+=e.key.toLowerCase();
-
 if(secret.includes("hugme")){
 alert("🤍 I will always be your safest hug, Iffu.");
 secret="";
 }
-
 if(secret.includes("forever")){
 popup.style.opacity="1";
 popup.style.pointerEvents="auto";
