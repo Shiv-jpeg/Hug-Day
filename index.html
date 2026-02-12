@@ -70,7 +70,7 @@ from{opacity:0;transform:translateY(25px);}
 to{opacity:1;transform:translateY(0);}
 }
 
-/* soft petals */
+/* petals */
 .petal{
 position:absolute;
 top:-20px;
@@ -90,6 +90,36 @@ bottom:25px;
 font-size:13px;
 opacity:0.6;
 }
+
+/* BIG I LOVE YOU popup */
+#lovePopup{
+position:fixed;
+top:0;
+left:0;
+height:100vh;
+width:100vw;
+background:rgba(0,0,0,0.75);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:999;
+opacity:0;
+pointer-events:none;
+transition:0.6s;
+}
+
+#lovePopup h2{
+font-family:'Playfair Display',serif;
+font-size:70px;
+color:white;
+letter-spacing:4px;
+animation:scaleLove 1s infinite alternate;
+}
+
+@keyframes scaleLove{
+from{transform:scale(1);}
+to{transform:scale(1.1);}
+}
 </style>
 </head>
 
@@ -99,75 +129,69 @@ opacity:0.6;
 
 <div id="container"></div>
 
+<div id="lovePopup">
+<h2>I LOVE YOU 🤍</h2>
+</div>
+
 <script>
 const lines = [
 
-{
-title:"My Iffu 🤍",
-text:"You are the calm shade of a tree in scorching heat — the quiet relief my soul did not know it was searching for."
-},
+{ title:"My Iffu 🤍",
+text:"You are the calm shade of a tree in scorching heat — the quiet relief my soul did not know it was searching for." },
 
-{
-title:"On This Hug Day 🫂",
-text:"If I could wrap my arms around every worry you carry, I would hold them until they forgot how to hurt you."
-},
+{ title:"On This Hug Day 🫂",
+text:"If I could wrap my arms around every worry you carry, I would hold them until they forgot how to hurt you." },
 
-{
-title:"Your Presence",
-text:"Feels like evening sunlight resting gently on tired shoulders — warm, golden, and impossibly peaceful."
-},
+{ title:"Your Presence",
+text:"Feels like evening sunlight resting gently on tired shoulders — warm, golden, and impossibly peaceful." },
 
-{
-title:"When I Hold You",
-text:"The world softens. The noise fades. And all that remains is a heartbeat learning the rhythm of forever."
-},
+{ title:"When I Hold You",
+text:"The world softens. The noise fades. And all that remains is a heartbeat learning the rhythm of forever." },
 
-{
-title:"Ifrah Mishra 🌸",
-text:"In your embrace, I find not just love, but dignity, respect, and a home built from tenderness."
-},
+{ title:"Ifrah Mishra 🌸",
+text:"In your embrace, I find not just love, but dignity, respect, and a home built from tenderness." },
 
-{
-title:"You Deserve",
-text:"A man who holds you not just with arms, but with intention — steady, protective, and endlessly gentle."
-},
+{ title:"You Deserve",
+text:"A man who holds you not just with arms, but with intention — steady, protective, and endlessly gentle." },
 
-{
-title:"Every Hug",
-text:"Is my silent promise that I will stand beside you in storms, and never let your light dim alone."
-},
+{ title:"Every Hug",
+text:"Is my silent promise that I will stand beside you in storms, and never let your light dim alone." },
 
-{
-title:"Stay Close",
-text:"Because when you lean into me, even time pauses… as if it knows something sacred is happening."
-},
+{ title:"Stay Close",
+text:"Because when you lean into me, even time pauses… as if it knows something sacred is happening." },
 
-{
-title:"My Safe Place",
-text:"Your heartbeat against mine feels like a quiet prayer answered without asking."
-},
+{ title:"My Safe Place",
+text:"Your heartbeat against mine feels like a quiet prayer answered without asking." },
 
-{
-title:"Come Here 🤍",
-text:"Let me hold you the way a gentleman holds something precious — carefully, gratefully, forever."
-}
+{ title:"One Small Question 🤍",
+text:"Will you promise to let me be the arms you run to, on your happiest days and your hardest ones?" }
 
 ];
 
 let current = 0;
 const container = document.getElementById("container");
+const popup = document.getElementById("lovePopup");
 
 lines.forEach((item,i)=>{
 let page=document.createElement("div");
 page.className="page";
 page.style.left=i*100+"vw";
 
+if(i === lines.length-1){
+page.innerHTML=`
+<h1>${item.title}</h1>
+<p>${item.text}</p>
+<button onclick="showLove()">Yes, Always 🤍</button>
+<div class="swipe">Tap gently</div>
+`;
+}else{
 page.innerHTML=`
 <h1>${item.title}</h1>
 <p>${item.text}</p>
 <button onclick="nextPage()">Next</button>
 <div class="swipe">Swipe or tap Next</div>
 `;
+}
 
 container.appendChild(page);
 });
@@ -180,13 +204,24 @@ softVibrate();
 }
 }
 
+function showLove(){
+popup.style.opacity="1";
+popup.style.pointerEvents="auto";
+softVibrate();
+}
+
+popup.addEventListener("click",()=>{
+popup.style.opacity="0";
+popup.style.pointerEvents="none";
+});
+
 function softVibrate(){
 if(navigator.vibrate){
-navigator.vibrate(40);
+navigator.vibrate([40,30,40]);
 }
 }
 
-/* gentle falling petals */
+/* petals */
 function createPetal(){
 let petal=document.createElement("div");
 petal.className="petal";
@@ -198,17 +233,24 @@ setTimeout(()=>petal.remove(),12000);
 }
 setInterval(createPetal,900);
 
-/* music autoplay after first interaction */
+/* music */
 document.body.addEventListener("click",()=>{
 document.getElementById("bgMusic").play();
 },{once:true});
 
-/* hidden easter egg */
+/* easter eggs */
 let secret="";
 document.addEventListener("keydown",(e)=>{
 secret+=e.key.toLowerCase();
+
 if(secret.includes("hugme")){
-alert("🤍 Easter Egg: I will always be your safest hug, Iffu.");
+alert("🤍 I will always be your safest hug, Iffu.");
+secret="";
+}
+
+if(secret.includes("forever")){
+popup.style.opacity="1";
+popup.style.pointerEvents="auto";
 secret="";
 }
 });
